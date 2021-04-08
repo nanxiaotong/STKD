@@ -4,4 +4,4 @@ Knowledge distillation (KD) transfers discriminative knowledge from a large and 
 
 
 
-# Our relative code on CIFAR-10 and CIFAR-100 will be made publicly available at Github.
+Our relative code on CIFAR-10 and CIFAR-100 will be made publicly available at Github.
