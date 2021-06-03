@@ -372,14 +372,6 @@ def main():
                 loss_course = F.kl_div(F.log_softmax(ys, dim = 1), F.softmax(Variable(y_t_auto), dim=1)) + F.kl_div(F.log_softmax(y_t_auto, dim = 1), F.softmax(Variable(ys), dim=1)) 
                 y_tech_temp = torch.autograd.Variable(y_t_auto.data, requires_grad=False)
                 log_kd = rocket_distillation(ys, y_t, targets, opt.temperature, opt.alpha)
-                # + mutual_distillation(ys, y_tech_temp) DML对logits进行双向转移
-                # return rocket_distillation(ys, y_t, targets, opt.temperature, opt.alpha) + F.cross_entropy(y_t_auto, targets) + F.cross_entropy(ys, targets) + mutual_distillation(ys, y_tech_temp), (ys, y_t_auto, loss_student, loss_teacher, loss_course, log_kd)
-                # return opt.beta * sum(at_losses_groups)+ F.cross_entropy(y_t_auto, targets) + F.cross_entropy(ys, targets) + opt.gamma * sum(loss_groups), (ys, y_t_auto, loss_student, loss_teacher, loss_course, log_kd)
-                # return rocket_distillation(ys, y_t, targets, opt.temperature, opt.alpha) + F.cross_entropy(y_t_auto, targets) + F.cross_entropy(ys, targets) + opt.gamma * sum(loss_groups), (ys, y_t_auto, loss_student, loss_teacher, loss_course, log_kd)
-                # return rocket_distillation(ys, y_t, targets, opt.temperature, opt.alpha) + F.cross_entropy(y_t_auto, targets) + F.cross_entropy(ys, targets) +  opt.gamma * sum(loss_groups) + opt.gamma * ((y_tech_temp - ys) * (
-                #         y_tech_temp - ys)).sum() / opt.batchSize, (ys, y_t_auto, loss_student, loss_teacher, loss_course, log_kd)
-                # return rocket_distillation(ys, y_t, targets, opt.temperature, opt.alpha) + F.cross_entropy(y_t_auto, targets) + F.cross_entropy(ys, targets) + opt.gamma * (sum(loss_groups) + loss_course), (ys, y_t_auto, loss_student, loss_teacher, loss_course, log_kd)
-                # return opt.beta * sum(loss_groups) + F.cross_entropy(y_t_auto, targets) + F.cross_entropy(ys, targets) + opt.gamma * ((y_tech_temp - ys) * (y_tech_temp - ys)).sum() / opt.batchSize, (ys, y_t_auto, loss_student, loss_teacher, loss_course, log_kd)
                 return rocket_distillation(ys, y_t, targets, opt.temperature, opt.alpha) + opt.beta * sum(loss_groups) + F.cross_entropy(y_t_auto, targets) + F.cross_entropy(ys, targets) + opt.gamma * ((y_tech_temp - ys) * (y_tech_temp - ys)).sum() / opt.batchSize, (ys, y_t_auto, loss_student, loss_teacher, loss_course, log_kd)
             else:
                 y_s, y_t, loss_groups = data_parallel(f, inputs, params, stats, sample[2], np.arange(opt.ngpu))
